@@ -1,6 +1,180 @@
 # interview-prep
-## html
+## html部分
+### 浏览器渲染过程
+> 四个步骤。打油诗曰:先是生成DOM树，再次生成规则树，二者合为渲染树，遍历计算树节点，绘制节点至屏幕。
+- 解析html生成DOM树
+- 解析css生成cssDOM规则树
+- 将html DOM树和cssDOM规则树合并在一起，生成渲染树
+- 遍历渲染树，开始布局，计算渲染书节点的大小和位置
+- 将每个节点绘制到屏幕上
+
+----------
+
+### 语义化
+> 3个方向:何为语义化，如何语义化，语义化的好处
+#### 什么是语义化
+使用带有清晰含义、符合内容的标签去展示内容。
+#### 如何实现语义化
+页头页脚分别用header、footer，导航区用nav标签，段落用p，边栏用aside,主要内容要main标签
+
+#### 语义化的好处
+- 易于用户阅读，即使样式丢失，也能较好的展示页面
+- 便于屏幕阅读器等辅助工具，帮助阅读障碍人群阅读
+- 程序较为请求，有利于后期网站的维护
+- 便于seo和搜索引擎根据标签确定关键字的权重
+
+----------
+
+### img中title和alt的区别
+- title:鼠标移上去显示的文字，也可用于其他标签
+- alt 图片丢失时显示的文字
+
+----------
+
+### src和href的区别
+- src用于引进图片、外部js脚本等资源。浏览器解析时，遇到src标签将会暂停其他资源的下载和处理，一直到资源加载、编译、执行完毕。
+- href用于外部链接、外部css样式文件等资源。浏览器对外部css文件解析时，会并行下载其他资源。
+
+----------
+
+### reflow和repaint
+> 3个方向:是什么、怎么引起的、怎样降低影响
+#### reflow和repanit是什么
+- reflow
+	当DOM节点的布局属性(位置和大小)发生变化时，浏览器会重新描绘该属性，这就叫做重排(reflow)。
+- repaint
+	当DOM节点的可见性属性发生改变时，浏览器会重新绘制该节点，这就叫做重绘(repaint)。
+PS:重排必然会引起重绘。
+#### 什么操作会引起reflow和repaint？
+- 调整浏览器窗口的大小
+- 进行删减、添加元素的DOM操作
+- 字体大小和样式的改变
+- 元素内容发生改变，尤其是输入控件
+- hover等动作产生的用户交互行为
+- width、clientWidth、scrollTop等计算行为
+#### 如何降低reflow和repaint对性能的影响
+- 使用class统一改变样式，避免逐条改变样式。
+- 避免clientWidth和scrollTop的频繁操作。
+- 对需要的元素使用绝对定位脱离文档流，避免父元素和后续元素的大量回流。
+- 避免频繁的DOM操作。
+
+----------
+
+### viewport属性
+```
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+```
+* width	设置layout viewport 的宽度，为一个正整数，或字符串"width-device"
+* initial-scale	设置页面的初始缩放值，为一个数字，可以带小数
+* minimum-scale	允许用户的最小缩放值，为一个数字，可以带小数
+* maximum-scale	允许用户的最大缩放值，为一个数字，可以带小数
+* height	设置layout viewport 的高度，这个属性对我们并不重要，很少使用
+* user-scalable	是否允许用户进行缩放，值为"no"或"yes", no 代表不允许，yes代表允许这些属性可以同时使用，也可以单独使用或混合使用，多个属性同时使用时用逗号隔开就行了。       
+控制页面在移动端不要缩小显示。
+----------
+
+### canvas元素
+https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API
+
+### 渐进式渲染
+> 2个方向:什么是渐进式渲染,如何实现渐进式渲染
+#### 什么是渐进式渲染
+渐进式渲染(progressive rendering)是用于提高网页性能（尤其是提高用户感知的加载速度），以尽快呈现页面的技术。
+#### 如何实现渐进式渲染
+* 图片懒加载——页面上的图片不会一次性全部加载。当用户滚动页面到图片部分时，JavaScript 将加载并显示图像。
+* 确定显示内容的优先级（分层次渲染）——为了尽快将页面呈现给用户，页面只包含基本的最少量的 CSS、脚本和内容，然后可以使用延迟加载脚本或监听`DOMContentLoaded`/`load`事件加载其他资源和内容。
+* 异步加载 HTML 片段——当页面通过后台渲染时，把 HTML 拆分，通过异步请求，分块发送给浏览器。更多相关细节可以在[这里](http://www.ebaytechblog.com/2014/12/08/async-fragments-rediscovering-progressive-html-rendering-with-marko/)找到。
+
+
+----------
+
+### link和script在浏览器中的位置
+link放在文档开头的head标签中，script防止在body标签结束时。原因，css文件是对页面样式的描述，先加载css，可以给用户呈现一个体验感更高的网页。script文件大多数时候是一些用户和网站之间的交互函数，script加载时，会阻塞浏览器加载其他的网页资源，这样，可能会产生一个空白的页面给用户。script中如果要进行dom操作，也要依赖于body中的html代码。所以，先加载css资源，最后再加载script资源。
+
+
+----------
+
+### cookie、localStorage、sessionStorage的异同
+#### 相同点
+- 都是客户端存储机制
+- 数据都是以键值对的形式存储在客户端
+- 存储的数据都为字符串
+#### 不同点
+- 存储的大小:cookie为4kb,localStorage和sessionStorage为5M.
+- 有效期:cookie为手动设置的时间;localStorage一直存在，直至浏览器清理掉缓存;sessionStorage为页面关闭时
+- 服务器是否可以直接访问和设置:cookie可以，其余二者不可.
+- 访问权限:cookie和localStorage为域名下的任意窗口,sessionStorage为当前页面
+- 在浏览器会话的期间是否会更改:cookie取决于是否设置过期时间,localStorage不会更改,sessionStorage则会更改。
+#### 如何设置
+- cookie:document.cookie="userId=828; userName=hulk";
+- localStorage: localStorage.setItem("username","hulk");
+- sessionStorage: sessionStorage.setItem("username","hulk");
+
+
+----------
+
+### doctype的作用
+- 声明文档:声明html页面是用哪个版本的html进行编写的
+- 告知解析器采用什么DTD(文档类型定义)来解析html文档
+
+----------
+### 兼容性问题
+> 2个方向:兼容性问题产生的原因、如何解决兼容性问题；解决问题又分为:要不要做，要做的话做到什么程序、怎么做。
+#### 产生原因
+- 无统一的浏览器:浏览器产商根据自己对浏览器的需求开发不同的浏览器、浏览器功能不一
+- 浏览器版本:用户使用的浏览器版本不一:有的使用版本较新，有的使用版本较老。
+#### 如何解决兼容性问题
+##### 要不要做
+- 产品的目标客户：大部分目标用户使用的浏览器版本、对产品本身的要求(是以功能为主，还是以呈现页面为主)
+- 成本:投入产出比是否高，是否有盈利的空间
+##### 做到什么程序
+- 需要支持什么浏览器
+- 浏览器要支持到哪个版本
+##### 怎么做
+- 根据兼容性要求选择相应的库
+- 使用兼容性工具，比如(html5shiv.js、respond.js、css reset、normalize.css、Modernizr)
+- 条件注释、CSS Hack、js 能力检测做一些修补
+- 渐进增强和优雅降级
+	- 渐进增强:先针对低版本浏览器做开发，保证一些基本的需求，然后再对高浏览器进行交互、效果等功能的改进，以期达到提高用户体验的要求。
+	- 优雅降低:按照版本高的浏览器进行完整功能的开发，再按照需要兼容的低版本浏览器，进行功能和效果的改进
+
+
+## css部分
+###  如何居中显示 重点 一个未知宽高的元素如何居中显示
+- 行内元素(文字、图片等):`tex-align:center`
+- 块级元素：`margin:auto`或`margin:0 auto`
+https://github.com/yanhaijing/vertical-center
+
+### css盒模型
+https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Box_Model/Introduction_to_the_CSS_box_model
+IE怪异盒模型
+标注浏览器盒模型，两种盒模型的变换.
+
+### 弹性flex布局
+### box-sizing的应用场景
+### BFC
+overflow:hidden ：取消父子 margin 合并。 （另一种推荐做法：padding-top: 0.1px;）
+
+### 如何清除浮动
+（1）overflow: hidden
+
+（2）.clearfix 清除浮动写在爸爸身上
+
+    .clearfix::after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+
+    /* 兼容 IE */
+    .clearfix {
+        zoom: 1;
+    }
 ### CSS 选择器的优先级是如何计算的？
+- 选择器越具体，优先级越高，比如#xxx大于.yyy
+- 同样的优先级，写在后面的覆盖前面的。
+- color:red !important; 优先级最高
 
 浏览器通过优先级规则，判断元素展示哪些样式。优先级通过 4 个维度指标确定，我们假定以`a、b、c、d`命名，分别代表以下含义：
 
@@ -611,9 +785,57 @@ overflow: hidden;
 
 ```
 
-## css
+## javascript部分
+### 定时器
+```
+  console.log(1);
 
-## js
+    setTimeout(function () {
+        console.log(2);
+    }, 1000);
+
+    setTimeout(function () {
+        console.log(3);
+    }, 0);
+
+    console.log(4);
+1,3,4,2
+```
+```
+var arr = [1, 2, 3];
+for (var i = 0; i < arr.length; i++) {
+setTimeout(function () {
+    console.log(i);
+}, 0);
+}
+3,3,3
+```
+### 获取一个元素到顶部的距离
+### getBoundingClientRect获取的top和offsetTop获取的top区别 
+### 函数柯里化
+#### 什么是函数柯里化?
+#### 哪些地方用到了函数柯里化?
+### 如何实现继承
+- 构造函数
+- 原型链
+- extends
+### 如何自定义事件
+自定义事件的代码如下:
+```
+ var myEvent = new Event('clickTest');
+    element.addEventListener('clickTest', function () {
+        console.log('smyhvae');
+    });
+
+	//元素注册事件
+    element.dispatchEvent(myEvent); //注意，参数是写事件对象 myEvent，不是写 事件名 clickTest
+```
+
+### const常量是否能修改
+- 如果是值类型，值不可变
+- 如果是引用类型，比如对象、数组等，地址不可变，属性值可以修改
+- const的原理是引用地址不变
+
 
 ### 同源策略
 
@@ -654,7 +876,8 @@ btn.onclick=()=>{};
 let btn = document.getElementsByTagName('button')[0];
 btn.addEventListener('click',()=>{})
 ```
-
+### onClick和addEventListener的区别
+### 事件冒泡
 ### 事件委托
 
 事件委托利用事件冒泡,只指定一个事件处理程序，就可以管理某一类型的所有事件。使用事件委托可以节省内存。
@@ -735,6 +958,9 @@ obj.__proto__ === Object.prototype
 
 Object.prototype.**proto**指向 null
 
+### 原型链
+https://zhuanlan.zhihu.com/p/23090041
+
 ### 原型继承
 
 所有的 JS 对象都有一个 prototype 属性，指向它的原型对象。当试图访问一个对象的属性时，如果没有在该对象上找到，它还会搜寻该对象的原型，以及该对象的原型的原型，依次层层向上搜索，直到找到一个名字匹配的属性或到达原型链的末尾。
@@ -781,16 +1007,44 @@ SubType.prototype.sayAge = function() {
   - 由于闭包会使得函数中的变量都被保存在内存中，内存消耗很大，所以不能滥用闭包，否则会造成网页的性能问题，在 IE 中可能导致内存泄露。解决方法是，在退出函数之前，将不使用的局部变量全部删除。
   - 闭包会在父函数外部，改变父函数内部变量的值。所以，如果你把父函数当作对象（object）使用，把闭包当作它的公用方法（Public Method），把内部变量当作它的私有属性（private value），这时一定要小心，不要随便改变父函数内部变量的值。
 
-### 变量提升
+### 
+```
+var arr = [1, 2, 3];
+
+fun(arr);
+console.log(arr);
+
+function fun(a) {
+    a = [];
+
+}
+```
 
 var 会使变量提升，这意味着变量可以在声明之前使用。let 和 const 不会使变量提升，提前使用会报错。 变量提升（hoisting）是用于解释代码中变量声明行为的术语。使用 var 关键字声明或初始化的变量，会将声明语句“提升”到当前作用域的顶部。 但是，只有声明才会触发提升，赋值语句（如果有的话）将保持原样。
 var 提前使用将会报 undefined,let 和 const 提前使用将会报错
+函数作用域中的变量提升（两点提醒）
+提醒1：
+
+在函数作用域也有声明提前的特性：
+
+使用var关键字声明的变量，是在函数作用域内有效，而且会在函数中所有的代码执行之前被声明
+
+函数声明也会在函数中所有的代码执行之前执行
+
+因此，在函数中，没有var声明的变量都会成为全局变量，而且并不会提前声明。
 
 ### 使用 let、var 和 const 创建变量
+- let 的「创建」过程被提升了，但是初始化没有提升。
+- var 的「创建」和「初始化」都被提升了。
+- function 的「创建」「初始化」和「赋值」都被提升了。
+假设a被声明为变量，紧接着a又被声明为函数，原则是：声明会被覆盖（先来后到，就近原则）。
+PS：
+如果a已经有值，再用 var 声明是无效的。
 
+如果a已经有值，紧接着又被赋值，则赋值会被覆盖。
 用 var 声明的变量的作用域是它当前的执行上下文，它可以是嵌套的函数，也可以是声明在任何函数外的变量。let 和 const 是块级作用域，意味着它们只能在最近的一组花括号（function、if-else 代码块或 for 循环中）中访问。
 
-### 对象深拷贝
+### 深拷贝
 
 对象自己有相应的内存地址，而不是与原来的对象共享内存地址。
 
@@ -801,6 +1055,7 @@ let o1 = {a:{
 }
 let o2 = JSON.parse(JSON.stringify(o1))
 ```
+缺点：JSON 不支持函数、引用、undefined、RegExp、Date……
 
 另一种方法
 
@@ -818,7 +1073,26 @@ function deepCopy(s) {
     return d
 }
 ```
-
+3. 尾递归拷贝
+```
+ function clone(object){
+	     var object2
+	     if(! (object instanceof Object) ){
+	         return object
+	     }else if(object instanceof Array){
+	         object2 = []
+	     }else if(object instanceof Function){
+	         object2 = eval(object.toString())
+	     }else if(object instanceof Object){
+	         object2 = {}
+	     }
+	     你也可以把 Array Function Object 都当做 Object 来看待，参考 https://juejin.im/post/587dab348d6d810058d87a0a
+	     for(let key in object){
+	         object2[key] = clone(object[key])
+	     }
+	     return object2
+	 }
+```
 ### 数组去重
 
 1. 一维数组去重
@@ -827,6 +1101,19 @@ function deepCopy(s) {
 function unique (arr) {
    return [...new Set(arr)]
 }
+```
+```
+ var a = [4,2,5,6,3,4,5]
+ var hashTab = {}
+ for(let i=0; i<a.length;i++){
+     if(a[i] in hashTab){
+         // 什么也不做
+     }else{
+         hashTab[ a[i] ] = true
+     }
+ }
+ //hashTab: {4: true, 2: true, 5: true, 6:true, 3: true}
+ console.log(Object.keys(hashTab)) // ['4','2','5','6','3']
 ```
 
 2. 二位数组去重
@@ -853,14 +1140,10 @@ getUniqueArray(array, item){
 ```
 
 ### 数据类型
-
-1. Undefined
-2. Null
-3. Boolean
-4. Number
-5. String
-6. Object
-7. symbol(ES6 新增)
+- 基本数据类型：string number bool undefined null
+- 引用数据类型：object、symbol。
+另外，object 包括：数组、函数、正则、日期等对象。NaN属于number类型。
+注意，数据类型里，没有数组。因为数组属于object（一旦说数组、函数、正则、日期、NaN是数据类型，直接0分）。
 
 ### 内置函数(原生函数)
 
@@ -915,12 +1198,20 @@ https://github.com/skyline75489/what-happens-when-zh_CN/blob/master/README.rst?u
 请注意，ASI 只在换行符处起作用，而不会在代码行的中间插入分号。
 如果 JavaScript 解析器发现代码行可能因为缺失分号而导致错误，那么它就会自动补上分 号。并且，只有在代码行末尾与换行符之间除了空格和注释之外没有别的内容时，它才会 这样做。
 
-### 自执行函数
+### 自执行函数(立即执行函数)
+```
+(function(a, b) {
+    var name;  //声明一个局部变量
+    console.log("a = " + a);
+    console.log("b = " + b);
+})(123, 456);
+```
 
 自执行函数:1、声明一个匿名函数 2、马上调用这个匿名函数。
 作用：创建一个独立的作用域。
 
-好处：防止变量弥散到全局，以免各种 js 库冲突。隔离作用域避免污染，或者截断作用域链，避免闭包造成引用变量无法释放。利用立即执行特性，返回需要的业务函数或对象，避免每次通过条件判断来处理
+好处：防止变量弥散到全局，以免各种 js 库冲突。隔离作用域避免污染，或者截断作用域链，避免闭包造成引用变量无法释放。利用立即执行特性，返回需要的业务函数或对象，避免每次通过条件判断来处理。定义局部变量,防止污染全局变量;ES6之后我们使用let就可以了。
+立即执行函数无意义
 
 场景：一般用于框架、插件等场景
 
@@ -960,9 +1251,15 @@ str.replace(/\s/g,'');
 ```
 
 去除两边空格
-
+1. js方式
 ```
 str.trim()
+```
+2. 正则方式
+```
+ function trim(string) {
+        return string.replace(/^\s+|\s+$/g, '')
+    }
 ```
 
 ### new 一个对象经历了什么
@@ -1047,6 +1344,15 @@ newFunc() // Hi! Tom
 ```
 
 ### 请简述 JavaScript 中的 this
+1.  fn() 里面的 this 就是 window
+
+2.  fn() 是 strict mode，this 就是 undefined
+
+3.  a.b.c.fn() 里面的 this 就是 a.b.c
+
+4.  new F() 里面的 this 就是新生成的实例
+
+5.  () => console.log(this) ，这个this指的是外面的 this。
 
 JS 中的 this 是一个相对复杂的概念，不是简单几句能解释清楚的。粗略地讲，函数的调用方式决定了 this 的值。我阅读了网上很多关于 this 的文章，Arnav Aggrawal 写的比较清楚。this 取值符合以下规则：
 
@@ -1057,7 +1363,92 @@ JS 中的 this 是一个相对复杂的概念，不是简单几句能解释清�
 5. 如果符合上述多个规则，则较高的规则（1 号最高，4 号最低）将决定 this 的值。
 6. 如果该函数是 ES2015 中的箭头函数，将忽略上面的所有规则，this 被设置为它被创建时的上下文。
 
-## HTTP
+### 题目:考察变量定义提升、this指针指向、运算符优先级、原型、全局变量、变量污染、对象属性、原型属性优先
+```
+function Foo() {
+    getName = function () { alert (1); };
+    return this;
+}
+Foo.getName = function () { alert (2);};    //Foo函数上存储的静态属性
+Foo.prototype.getName = function () { alert (3);};
+var getName = function () { alert (4);};
+function getName() { alert (5);}
+ 
+//请写出以下输出结果：
+Foo.getName();
+getName();
+Foo().getName();
+getName();
+new Foo.getName();
+new Foo().getName();
+new new Foo().getName();
+```
+
+- Foo.getName
+访问Foo函数上存储的静态属性，结果是2。
+参考
+```
+function User(name) {
+	var name = name; //私有属性
+	this.name = name; //公有属性
+	function getName() { //私有方法
+		return name;
+	}
+}
+User.prototype.getName = function() { //公有方法
+	return this.name;
+}
+User.name = 'Wscats'; //静态属性
+User.getName = function() { //静态方法
+	return this.name;
+}
+var Wscat = new User('Wscats'); //实例化
+```
+注意:
+* 调用公有方法，公有属性，我们必需先实例化对象，也就是用new操作符实化对象，就可构造函数实例化对象的方法和属性，并且公有方法是不能调用私有方法和静态方法的
+* 静态方法和静态属性就是我们无需实例化就可以调用
+* 而对象的私有方法和属性,外部是不可以访问的
+
+- getName();
+结果是5，优先访问function getName()     
+- 变量提升，函数声明会被提升到作用域最前面
+- 函数表达式创建的函数是在运行时赋值，最后等到表达式赋值完成后才能调用.
+
+- Foo().getName();
+结果是1,访问Foo()函数的getName()方法.注意此处的Foo()函数的getName没有用var或者Let声明,所以,getName变为了全局变量。这个时候,getName将全局的getName变量重写。
+Foo执行后把全局的getName函数重写了一遍.
+注意,Foo()函数中的this指向的是window对象，也就是说Foo 函数，返回的是windows对象，相当于执行window.getName();this的指向由函数的调用方式决定。
+
+- getName
+结果是1,上层的Foo().getName把var getName重写了。
+- new Foo.getName();
+结果是2 
+new Foo;
+Foo.getName();
+
+- new Foo().getName();
+(new Foo()).getName();
+结果是3
+new 了一个foo对象，定义了一个getName方法。优先采用原型链方法
+
+- new new Foo().getName();
+结果是3
+new ((new Foo()).getName)();
+
+## HTTP部分
+### http2.0和https
+### cookie和session
+#### cookie
+- HTTP响应通过 Set-Cookie 设置 Cookie
+- 浏览器访问指定域名是必须带上 Cookie 作为 Request Header
+- Cookie 一般用来记录用户信息
+#### session
+- Session 是服务器端的内存（数据）
+- session 一般通过在 Cookie 里记录 SessionID 实现
+- SessionID 一般是随机数
+### tcp/ip握手过程
+### 网络四层架构
+### RESTful
 REST 指的是一组架构约束条件和原则。满足这些约束条件和原则的应用程序或设计就是 RESTful。
 
 * GET<br>
@@ -1076,6 +1467,10 @@ Delete在Rest请求中主要用于删除资源，因为大多数浏览器不支�
 Delete方法的参数同post一样存放在消息体中,具有安全性，可发送较大信息 Delete方法是幂等的，不论对同一个资源进行多少次delete请求都不会破坏数据
 
 ### GET和POST的区别
+GET和POST本质上就是TCP链接，并无差别。但是由于HTTP的规定和浏览器/服务器的限制，导致他们在应用过程中体现出一些不同。
+
+需要注意的是，web 中的 get/post 只是 http 中的 get/post 的子集。http 中的 get 与 post 只是单纯的名字上的区别，get 请求的数据也可以放在 request body 中，只是浏览器没有实现它，但是 get 并不只是在 web 中使用。
+
 * GET产生一个TCP数据包；POST产生两个TCP数据包。
 * GET在浏览器回退时是无害的，而POST会再次提交请求。
 * GET产生的URL地址可以被Bookmark，而POST不可以。
@@ -1113,6 +1508,17 @@ Accept:text/xml； <br>
 Content-Type:text/html <br>
 即代表希望接受的数据类型是xml格式，本次请求发送的数据的数据格式是html。<br>
 
+### http 缓存
+### 强制缓存和协商缓存的区别
+强制缓存
+```
+Expires或Cache-Control
+```
+协商缓存
+- 第一对：Last-Modified、If-Modified-Since
+
+- 第二对：ETag、If-None-Match
+
 ### 状态码
 
 | 状态码 | 类别 | 描述 |
@@ -1122,8 +1528,46 @@ Content-Type:text/html <br>
 | 3xx | Redirection（重定向状态码） | 需要附加操作已完成请求 |
 | 4xx | Client Error（客户端错误状态码） | 服务器无法处理请求 |
 | 5xx | Server Error（服务器错误状态码） | 服务器处理请求出错 |
+2XX——表明请求被正常处理了
 
-### 如何处理不让别人盗用你的图片，访问你的服务器资源
+1. 200 OK：请求已正常处理。
+
+2. 204 No Content：请求处理成功，但没有任何资源可以返回给客户端，一般在只需要从客户端往服务器发送信息，而对客户端不需要发送新信息内容的情况下使用。
+
+3. 206 Partial Content：是对资源某一部分的请求，该状态码表示客户端进行了范围请求，而服务器成功执行了这部分的GET请求。响应报文中包含由Content-Range指定范围的实体内容。
+
+3XX——表明浏览器需要执行某些特殊的处理以正确处理请求
+
+4. 301 Moved Permanently：资源的uri已更新，你也更新下你的书签引用吧。永久性重定向，请求的资源已经被分配了新的URI，以后应使用资源现在所指的URI。永久充定向，浏览器会记住，有缓存。
+
+5. 302 Found：资源的URI已临时定位到其他位置了，姑且算你已经知道了这个情况了。临时性重定向。和301相似，但302代表的资源不是永久性移动，只是临时性性质的。换句话说，已移动的资源对应的URI将来还有可能发生改变。临时重定向，无缓存。
+
+6. 303 See Other：资源的URI已更新，你是否能临时按新的URI访问。该状态码表示由于请求对应的资源存在着另一个URL，应使用GET方法定向获取请求的资源。303状态码和302状态码有着相同的功能，但303状态码明确表示客户端应当采用GET方法获取资源，这点与302状态码有区别。
+
+当301,302,303响应状态码返回时，几乎所有的浏览器都会把POST改成GET，并删除请求报文内的主体，之后请求会自动再次发送。
+
+7. 304 Not Modified：资源已找到，但未符合条件请求。该状态码表示客户端发送附带条件的请求时（采用GET方法的请求报文中包含If-Match，If-Modified-Since，If-None-Match，If-Range，If-Unmodified-Since中任一首部）服务端允许请求访问资源，但因发生请求未满足条件的情况后，直接返回304.。
+
+8. 307 Temporary Redirect：临时重定向。与302有相同的含义。
+
+4XX——表明客户端是发生错误的原因所在。
+
+9. 400 Bad Request：服务器端无法理解客户端发送的请求，请求报文中可能存在语法错误。
+
+10. 401 Unauthorized：该状态码表示发送的请求需要有通过HTTP认证（BASIC认证，DIGEST认证）的认证信息。
+
+11. 403 Forbidden：不允许访问那个资源。该状态码表明对请求资源的访问被服务器拒绝了。（权限，未授权IP等）
+
+12. 404 Not Found：服务器上没有请求的资源。路径错误等。
+
+5XX——服务器本身发生错误
+
+13. 500 Internal Server Error：貌似内部资源出故障了。该状态码表明服务器端在执行请求时发生了错误。也有可能是web应用存在bug或某些临时故障。
+
+14. 503 Service Unavailable：抱歉，我现在正在忙着。该状态码表明服务器暂时处于超负载或正在停机维护，现在无法处理请求。
+### 200和304的区别
+
+### 如何处理不让别人盗用你的图片，访问你的服务器资源(盗链)
 * http header, 对refer做判断看来源是不是自己的网站，如果不是就拒绝
 * 通过session校验，如果不通过特定服务生成cookie和session就不能请求得到资源
 
@@ -1188,8 +1632,9 @@ XSS是一种经常出现在web应用中的计算机安全漏洞，它允许恶�
 * 将重要的cookie标记为http only, 这样的话Javascript 中的document.cookie语句就不能获取到cookie了.
 * 表单数据规定值的类型，例如：年龄应为只能为int、name只能为字母数字组合。。。。
 * 对数据进行Html Encode 处理
-* 过滤或移除特殊的Html标签， 例如: <script>, <iframe> , &lt; for <, &gt; for >, &quot for
+* 过滤或移除特殊的Html标签。过滤 例如: <script>, <iframe> , &lt; for <, &gt; for >, &quot for
 * 过滤JavaScript 事件的标签。例如 "onclick=", "onfocus" 等等。
+转义 ②DOM解析白名单 ③第三方库 ④CSP
 
 ### CSRF
 CSRF（Cross-site request forgery）跨站请求伪造，也被称为“One Click Attack”或者Session Riding，通常缩写为CSRF或者XSRF，是一种对网站的恶意利用。尽管听起来像跨站脚本（XSS），但它与XSS非常不同，XSS利用站点内的信任用户，而CSRF则通过伪装来自受信任用户的请求来利用受信任的网站。与XSS攻击相比，CSRF攻击往往不大流行（因此对其进行防范的资源也相当稀少）和难以防范，所以被认为比XSS更具危险性。
@@ -1206,7 +1651,10 @@ CSRF（Cross-site request forgery）跨站请求伪造，也被称为“One Clic
 * 对于用户修改删除等操作最好都使用post操作 。
 * 避免全站通用的cookie，严格设置cookie的域。
 
-## 其他
+## 其他部分
+### cdn
+#### cdn的思路
+其基本思路是尽可能避开互联网上有可能影响数据传输速度和稳定性的瓶颈和环节，使内容传输的更快、更稳定。
 ### 前端性能优化
 * 减少 HTTP 请求
 * 减少 DOM 操作
@@ -1219,7 +1667,20 @@ CSRF（Cross-site request forgery）跨站请求伪造，也被称为“One Clic
 * 使用 CDN 加速，适当进行文件缓存
 * 合理控制 cookie 大小（每次请求都会包含 cookie）
 
-## vue
+### gzip压缩
+
+## vue部分
+### vuex作用
+### vue的项目构建
+- 按模块
+- 模块下按照vue的架构分类，如图片、样式表、功能代码分类
+- 功能代码按照功能组件化编写。
+### vue的特点
+- 数据驱动、组件化
+### 双向绑定的实现原理
+- 通过mvvm
+- Object.defineProperty( )
+- 虚拟DOM
 ### 什么是mvvm
 MVVM最早由微软提出来，它借鉴了桌面应用程序的MVC思想，在前端页面中，把Model用纯JavaScript对象表示，View负责显示，两者做到了最大限度的分离
 把Model和View关联起来的就是ViewModel。<br>
@@ -1298,7 +1759,9 @@ Vue中的生命周期也是一样，对应了Vue实例从创建到结束之间�
 
 至于Vue具体的生命周期函数有哪些，请看官网[API文档](https://cn.vuejs.org/v2/api/#%E9%80%89%E9%A1%B9-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%92%A9%E5%AD%90)
 
+### create和mounted的区别
 
+### 什么时候执行update
 
 ## 组件传值
 * 父组件通过prop向子组件传值
@@ -1452,3 +1915,148 @@ store实例上有数据，有方法，方法改变的都是store实例上的数�
 一般来说，`v-if` 有更高的切换开销，而 `v-show` 有更高的初始渲染开销。因此，如果需要非常频繁地切换，则使用 `v-show` 较好；如果在运行时条件很少改变，则使用`v-if` 较好。
 
 https://cn.vuejs.org/v2/guide/conditional.html#v-if-vs-v-show
+
+## ES6部分
+### class
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes
+
+### ES6的新特性有哪些?
+- 作用域
+- 函数扩展(扩展运算符、默认参数、箭头函数)
+- 异步promise
+- 模块化
+### 箭头函数与匿名函数的区别
+箭头函数的匿名函数的区别是，箭头函数内部的this是词法作用域，由上下文确定。  
+普通this是动态作用域；箭头函数的this指向词法作用域
+```
+var obj1 = {
+    birth: 1990,
+    getAge: function (year) {   
+        let fn=function(y){
+            return y - this.birth; // this指向window或undefined
+        };  
+        return fn(year); 
+    }
+};
+
+var obj2 = {
+    birth: 1990,
+    getAge: function (year) {
+        var fn = (y) => y - this.birth; // this.birth为1990
+        return fn(year);
+    }
+};
+```
+### promise
+#### promise的使用
+then：
+```
+	$.ajax(...).then(成功函数, 失败函数)
+```
+
+链式 then：
+```
+ 	$.ajax(...).then(成功函数, 失败函数).then(成功函数2, 失败函数2)
+```
+如何自己生成 Promise 对象：
+```
+	function xxx(){
+      return new Promise(function(resolve, reject){
+          setTimeout(()=>{
+              resolve() 或者 reject()
+          },3000)
+      })
+  }
+  xxx().then(...)
+```
+#### promise的状态
+#### setTimeout(0)和一个promise哪个先执行
+任务队列可以有多个，promise的任务队列，优先级更高
+
+### asynv/await
+目的：把异步代码写成同步代码的形式。
+```
+let promise = new Promise((resolve, reject) => {
+        //进来之后，状态为pending
+        console.log('111');  //这一行代码是同步的
+        //开始执行异步操作（这里开始，写异步的代码，比如ajax请求 or 开启定时器）
+        if (异步的ajax请求成功) {
+            console.log('333');
+            resolve();//如果请求成功了，请写resolve()，此时，promise的状态会被自动修改为fullfilled
+        } else {
+            reject();//如果请求失败了，请写reject()，此时，promise的状态会被自动修改为rejected
+        }
+    })
+    console.log('222');
+
+    //调用promise的then()
+    promise.then(() => {
+            //如果promise的状态为fullfilled，则执行这里的代码
+            console.log('成功了');
+        }
+        , () => {
+            //如果promise的状态为rejected，则执行这里的代码
+            console.log('失败了');
+
+        }
+    )
+```
+有了await之后，可以直接替换掉then。如下：
+```
+ function returnPromise(){
+     return new Promise( function(resolve, reject){
+         setTimeout(()=>{
+             resolve('success')
+         },3000)
+     })
+ }
+
+ returnPromise().then((result)=>{
+     result === 'success'
+ })
+
+ var result = await returnPromise()
+ result === 'success'
+```
+## webpack部分
+###　webpack实现vue-cli
+### 入口文件怎么配置，多入口怎么分割
+### 打包
+
+## nodejs部分
+### 跨域的实现
+```
+const cors = require('cors');
+const corsOptions = {
+  origin: ['http://localhost:8083','http://localhost:8083'],    //  配置Access-Control-Allow-Origin 
+  optionSuccessStatus: 200, //  为成功的请求提供一个状态码
+  methods:['GET','POST'],   //  配置Access-Control-Allow-Methods cors的
+  alloweHeaders:['Conten-Type', 'Authorization']    //  Access-Control-Allow-Headers 
+};
+app.use(cors(corsOptions));
+```
+## express部分
+
+## 移动端部分
+### 触摸事件
+- touchstart touchmove touchend touchcancel（touchcancel当触点由于某些原因被中断时触发）
+- 移动端浏览器和电脑浏览器的touch事件的区别:移动端存在点击延迟，touchend和click之间存在300ms~350ms的延迟。主要是浏览器看你要不要进行双击(double tap)操作。
+解决方法
+    - 将click事件换成touch end事件
+    - FastClick：FastClick的实现原理是在检测到touchend事件的时候，会通过DOM自定义事件立即出发模拟一个click事件，并把浏览器在300ms之后真正的click事件阻止掉。
+
+- 事件发生顺序：在移动端，手指点击一个元素，会经过：touchstart --> touchmove -> touchend --》click。
+### 手机端的web，怎么调用手机的拍照功能，怎么分享到朋友圈?
+## websocket
+## git 
+团队工作
+
+## 算法
+### 二分查找
+
+### 快速排序
+
+### 线性顺序存储结构和链式存储结构
+
+### CommonJS、RequireJS(AMD) SeaJS（CMD）区别
+
