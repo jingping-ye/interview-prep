@@ -117,6 +117,9 @@ link放在文档开头的head标签中，script防止在body标签结束时。�
 ### doctype的作用
 - 声明文档:声明html页面是用哪个版本的html进行编写的
 - 告知解析器采用什么DTD(文档类型定义)来解析html文档
+（1）、<!DOCTYPE>声明位于位于HTML文档中的第一行，处于 <html> 标签之前。告知浏览器的解析器用什么文档标准解析这个文档。DOCTYPE不存在或格式不正确会导致文档以兼容模式呈现。
+
+（2）、标准模式的排版 和JS运作模式都是以该浏览器支持的最高标准运行。在兼容模式中，页面以宽松的向后兼容的方式显示,模拟老式浏览器的行为以防止站点无法工作。
 
 ----------
 ### 兼容性问题
@@ -145,7 +148,73 @@ link放在文档开头的head标签中，script防止在body标签结束时。�
 - 行内元素(文字、图片等):`tex-align:center`
 - 块级元素：`margin:auto`或`margin:0 auto`
 https://github.com/yanhaijing/vertical-center
+1. position定位
+```
+/*（不定宽高）*/
+{
+    position: absolute;;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+/*固定宽高*/
+{
+    position: absolute;;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
 
+```
+2. flex布局
+```
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+```
+3. display:table
+```
+/*(子元素会占满整个父级)*/
+.parent{
+    width:100%;
+    display:table
+}
+.child{
+    display:table-cell;
+    text-align:center;
+    vertical-align:center
+}
+```
+### 多列等高布局
+1. padding/margin抵消
+```
+父级：overflow:hidden;
+
+子级：{
+padding-bottom:99999px;
+margin-bottom:-99999px;
+}
+```
+2. flex布局
+```
+父级：display:flex;
+
+子级：默认与父级等高
+```
+3. table布局
+父级： `display:table;`
+
+子级：`display:table-cell;`
+4. postion布局
+```
+父级：position:relative;
+
+子级：position:absolute;top:0;bottom:0;
+```
 ### css盒模型
 https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Box_Model/Introduction_to_the_CSS_box_model
 IE怪异盒模型
@@ -172,6 +241,8 @@ overflow:hidden ：取消父子 margin 合并。 （另一种推荐做法：padd
         zoom: 1;
     }
 ### CSS 选择器的优先级是如何计算的？
+important > 内联 > ID > 类 > 标签 | 伪类 | 属性选择 > 伪对象 > 继承 > 通配符
+
 - 选择器越具体，优先级越高，比如#xxx大于.yyy
 - 同样的优先级，写在后面的覆盖前面的。
 - color:red !important; 优先级最高
@@ -435,6 +506,13 @@ CSS 伪元素是添加到选择器的关键字，去选择元素的特定部分�
 
 
 ### 说说你对盒模型的理解，以及如何告知浏览器使用不同的盒模型渲染布局。
+包含了元素内容（content）、内边距（padding）、边框（border）、外边距（margin）几个要素
+
+IE盒模型： content==包含==border和padding
+
+标准盒模型： content==不包含==border和padding
+box-sizing语法：
+box-sizing: content-box|border-box|inherit;
 
 CSS 盒模型描述了以文档树中的元素而生成的矩形框，并根据排版模式进行布局。每个盒子都有一个内容区域（例如文本，图像等）以及周围可选的`padding`、`border`和`margin`区域。
 
@@ -838,6 +916,7 @@ setTimeout(function () {
 
 
 ### 同源策略
+协议、域名、端口三者相同。 由于同源策略产生安全问题。
 
 同源策略是浏览器的一个安全功能。URL 由协议、域名、端口和路径组成。比较两个 url,如果协议、域名或端口三者有一个不同，那就是不同源。浏览器采用同源策略，禁止页面加载或执行与自身来源不同的域的脚本。比如，如果客户端与服务器的域名不一，那么服务器将不允许客户端访问。不受同源策略影响的标签:script、img、iframe、link。
 
@@ -851,6 +930,13 @@ setTimeout(function () {
 - cors 前后端协作设置请求头部,Access-Controll-Allow-Origin 等头部信息
 - iframe 嵌套通讯,postmessage
 
+### cors跨域
+
+当你使用XMLHttpRequest发送请求时，浏览器发现该请求不符合同源策略，会给该请求加一个请求头：Origin，后台进行一系列处理，如果确定接受请求则在返回结果中加入一个响应头：Access-Control-Allow-Origin;浏览器判断该相应头中是否包含Origin的值，如果有则浏览器会处理响应，我们就可以拿到响应数据，如果不包含浏览器直接驳回，这时我们无法拿到响应数据。
+
+### jsop与cors的区别
+- JSONP只能实现GET请求，而CORS支持所有类型的HTTP请求。
+- JSONP无法判断是否请求失败，
 ### 什么是 jsonp
 
 有一些标签不受同源策略影响，我们就把数据封装好，返回给这些标签。jsonp 指的是其中的一种非正式传输协议，它的要点是允许用户传递一个**callback**参数给服务端，然后服务端返回数据会将整个 callback 参数作为函数名来包裹住 json 数据。仅用于 get 请求
@@ -1436,6 +1522,25 @@ new 了一个foo对象，定义了一个getName方法。优先采用原型链方
 new ((new Foo()).getName)();
 
 ## HTTP部分
+### url->页面加载完成的整个流程
+1. 浏览器查询域名对应的IP地址
+2. 浏览器根据IP地址与服务器建立socket连接
+3. 浏览器与服务器进行通信：浏览器请求，服务器处理请求
+4. 浏览器与服务器断开连接
+
+### 一个页面从输入url到页面加载显示完成
+1. 用户输入网址，浏览器发起DNS查询请求，查找对应的IP地址
+2. 建立TCP连接：通过DNS获取到web服务器真的IP地址建立连接
+3. 浏览器向 web 服务器发送一个 HTTP 请求
+4. 服务器发送响应数据给客户端
+5. 浏览器解析解析服务器返回的响应
+
+### vue的生命周期
+1. 创建前/后： 在beforeCreate阶段，vue实例的挂载元素el和数据对象data都为undefined，还未初始化，created阶段，vue实例的数据对象data有了，el还没有；
+2. 载入前/后：在beforeMount阶段，vue实例的$el和data都初始化了，但还是挂载之前为虚拟的dom节点，data.message还未替换。在mounted阶段，vue实例挂载完成，data.message成功渲染。
+3. 更新前/后：当data变化时，会触发beforeUpdate和updated方法。
+4. 销毁前/后：在执行destroy方法后，对data的改变不会再触发周期函数，说明此时vue实例已经解除了事件监听以及和dom的绑定，但是dom结构依然存在
+
 ### http2.0和https
 ### cookie和session
 #### cookie
@@ -1481,6 +1586,10 @@ GET和POST本质上就是TCP链接，并无差别。但是由于HTTP的规定和
 * 对参数的数据类型，GET只接受ASCII字符，而POST没有限制。
 * GET比POST更不安全，因为参数直接暴露在URL上，所以不能用来传递敏感信息。
 * GET参数通过URL传递，POST放在Request body中。
+缓存:get请求能够被缓存，post请求默认不会被缓存(缓存是针对URL的)
+安全性:包含在URL中明文显示，且服务器的日志会记录，非常不安全 。
+数据量：没有规定，但是受限于浏览器平台。通常，get较小。
+
 
 ### Accept和Content-Type
 Accept 请求头用来告知客户端可以处理的内容类型，这种内容类型用MIME类型来表示。
