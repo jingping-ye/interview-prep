@@ -1,5 +1,36 @@
 # interview-prep
 ## html部分
+## html5有哪些新特性、移除了那些元素？如何处理HTML5新标签的浏览器兼容问题？如何区分 HTML 和HTML5?
+HTML5 现在已经不是 SGML 的子集，主要是关于图像，位置，存储，多任务等功能的增加。
+
+绘画 canvas
+用于媒介回放的 video 和 audio 元素
+本地离线存储 localStorage 长期存储数据，浏览器关闭后数据不丢失；
+sessionStorage 的数据在浏览器关闭后自动删除
+
+语意化更好的内容元素，比如 article、footer、header、nav、section
+表单控件，calendar、date、time、email、url、search
+新的技术webworker, websockt, Geolocation
+
+移除的元素
+
+纯表现的元素：basefont，big，center，font, s，strike，tt，u；
+
+对可用性产生负面影响的元素：frame，frameset，noframes；
+
+支持HTML5新标签：
+
+IE8/IE7/IE6支持通过document.createElement方法产生的标签，
+可以利用这一特性让这些浏览器支持HTML5新标签，
+
+浏览器支持新标签后，还需要添加标签默认的样式：
+
+当然最好的方式是直接使用成熟的框架、使用最多的是html5shim框架
+<!--[if lt IE 9]>
+<script> src="http://html5shim.googlecode.com/svn/trunk/html5.js"</script>
+<![endif]-->
+如何区分： DOCTYPE声明\新增的结构元素\功能元素
+
 ### html5为什么只需要写<!DOCTYPE HTML>?
 HTML5 不基于 SGML，因此不需要对DTD进行引用，但是需要doctype来规范浏览器的行为（让浏览器按照它们应该的方式来运行）；
 
@@ -22,8 +53,21 @@ HTML5 不基于 SGML，因此不需要对DTD进行引用，但是需要doctype�
 - 遍历渲染树，开始布局，计算渲染书节点的大小和位置
 - 将每个节点绘制到屏幕上
 
-----------
+## iframe的缺点
+- iframe会阻塞主页面的Onload事件；
 
+- iframe和主页面共享连接池，而浏览器对相同域的连接有限制，所以会影响页面的并行加载。
+   使用iframe之前需要考虑这两个缺点。如果需要使用iframe，最好是通过javascript
+   动态给iframe添加src属性值，这样可以可以绕开以上两个问题。
+
+## html5的form如何关闭自动完成功能
+给不想要提示的 form 或下某个input 设置为 autocomplete=off。
+
+
+----------
+### HTML5离线存储
+- localStorage    长期存储数据，浏览器关闭后数据不丢失；
+- sessionStorage  数据在浏览器关闭后自动删除。
 ### 语义化
 > 3个方向:何为语义化，如何语义化，语义化的好处
 #### 什么是语义化
@@ -36,7 +80,11 @@ HTML5 不基于 SGML，因此不需要对DTD进行引用，但是需要doctype�
 - 便于屏幕阅读器等辅助工具，帮助阅读障碍人群阅读
 - 程序较为请求，有利于后期网站的维护
 - 便于seo和搜索引擎根据标签确定关键字的权重
-
+用正确的标签做正确的事情！
+   html语义化就是让页面的内容结构化，便于对浏览器、搜索引擎解析；
+   在没有样式CCS情况下也以一种文档格式显示，并且是容易阅读的。
+   搜索引擎的爬虫依赖于标记来确定上下文和各个关键字的权重，利于 SEO。
+   使阅读源代码的人对网站更容易将网站分块，便于阅读维护理解。
 ----------
 
 ### img中title和alt的区别
@@ -120,6 +168,7 @@ link放在文档开头的head标签中，script防止在body标签结束时。�
 - 服务器是否可以直接访问和设置:cookie可以，其余二者不可.
 - 访问权限:cookie和localStorage为域名下的任意窗口,sessionStorage为当前页面
 - 在浏览器会话的期间是否会更改:cookie取决于是否设置过期时间,localStorage不会更改,sessionStorage则会更改。
+ cookie在浏览器和服务器间来回传递。 sessionStorage和localStorage不会
 #### 如何设置
 - cookie:document.cookie="userId=828; userName=hulk";
 - localStorage: localStorage.setItem("username","hulk");
@@ -158,6 +207,10 @@ link放在文档开头的head标签中，script防止在body标签结束时。�
 
 
 ## css部分
+### 页面导入样式时，使用link和@import的区别
+（1）link属于XHTML标签，除了加载CSS外，还能用于定义RSS, 定义rel连接属性等作用；而@import是CSS提供的，只能用于加载CSS;
+（2）页面被加载的时，link会同时被加载，而@import引用的CSS会等到页面被加载完再加载;
+（3）import是CSS2.1 提出的，只在IE5以上才能被识别，而link是XHTML标签，无兼容问题;
 ###  如何居中显示 重点 一个未知宽高的元素如何居中显示
 - 行内元素(文字、图片等):`tex-align:center`
 - 块级元素：`margin:auto`或`margin:0 auto`
@@ -230,6 +283,8 @@ margin-bottom:-99999px;
 子级：position:absolute;top:0;bottom:0;
 ```
 ### css盒模型
+（1）有两种， IE 盒子模型、标准 W3C 盒子模型；IE的content部分包含了 border 和 pading;
+（2）盒模型： 内容(content)、填充(padding)、边界(margin)、 边框(border).
 https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Box_Model/Introduction_to_the_CSS_box_model
 IE怪异盒模型
 标注浏览器盒模型，两种盒模型的变换.
@@ -255,6 +310,29 @@ overflow:hidden ：取消父子 margin 合并。 （另一种推荐做法：padd
         zoom: 1;
     }
 ### CSS 选择器的优先级是如何计算的？
+css的选择器有哪些?哪些属性可以继承?优先级算法计算？css新增伪类?
+1. id选择器（ # myid）
+2. 类选择器（.myclassname）
+3. 标签选择器（div, h1, p）
+4. 相邻选择器（h1 + p）
+5. 子选择器（ul > li）
+6. 后代选择器（li a）
+7. 通配符选择器（ * ）
+8. 属性选择器（a[rel = "external"]）
+9. 伪类选择器（a: hover, li: nth - child）
+可继承的样式： font-size font-family color, UL LI DL DD DT;
+不可继承的样式：border padding margin width height ;
+优先级就近原则，同权重情况下样式定义最近者为准;
+载入样式以最后载入的定位为准;
+
+新增样式:
+  p:first-of-type    选择属于其父元素的首个 <p> 元素的每个 <p> 元素。
+   p:last-of-type    选择属于其父元素的最后 <p> 元素的每个 <p> 元素。
+   p:only-of-type    选择属于其父元素唯一的 <p> 元素的每个 <p> 元素。
+   p:only-child    选择属于其父元素的唯一子元素的每个 <p> 元素。
+   p:nth-child(2)    选择属于其父元素的第二个子元素的每个 <p> 元素。
+    :enabled  :disabled 控制表单控件的禁用状态。
+   :checked        单选框或复选框被选中。
 important > 内联 > ID > 类 > 标签 | 伪类 | 属性选择 > 伪对象 > 继承 > 通配符
 
 - 选择器越具体，优先级越高，比如#xxx大于.yyy
@@ -713,8 +791,47 @@ div {
   margin: 0;
 }
 ```
-
+### 列出display的值，并说明他们的作用,position的值, relative和absolute定位原点是？
+block 象块类型元素一样显示。
+none 缺省值。象行内元素类型一样显示。
+inline-block 象行内元素一样显示，但其内容象块类型元素一样显示。
+list-item 象块类型元素一样显示，并添加样式列表标记。
+*absolute
+生成绝对定位的元素，相对于 static 定位以外的第一个父元素进行定位。
+*fixed （老IE不支持）
+生成绝对定位的元素，相对于浏览器窗口进行定位。
+*relative
+生成相对定位的元素，相对于其正常位置进行定位。
+static 默认值。没有定位，元素出现在正常的流中
+*（忽略 top, bottom, left, right z-index 声明）。
+inherit 规定从父元素继承 position 属性的值。
+### css3的新特性
+CSS3实现圆角（border-radius:8px），阴影（box-shadow:10px），
+对文字加特效（text-shadow、），线性渐变（gradient），旋转（transform）
+transform:rotate(9deg) scale(0.85,0.90) translate(0px,-30px) skew(-9deg,0deg);//旋转,缩放,定位,倾斜
+增加了更多的CSS选择器  多背景 rgba
 ### 水平垂直居中的方式
+#### 左右居中
+给div设置一个宽度，然后添加margin:0 auto属性
+```
+    div{
+        width:200px;
+        margin:0 auto;
+     }
+```
+#### 居中一个浮动元素
+确定容器的宽高 宽500 高 300 的层
+设置层的外边距
+```
+.div {
+    Width:500px ; height:300px;//高度可以不设
+    Margin: -150px 0 0 -250px;
+    position:relative;相对定位
+    background-color:pink;//方便看效果
+    left:50%;
+    top:50%;
+}
+```
 #### flex
 ```
 // 父容器
@@ -1534,6 +1651,50 @@ new 了一个foo对象，定义了一个getName方法。优先采用原型链方
 - new new Foo().getName();
 结果是3
 new ((new Foo()).getName)();
+## 浏览器部分
+### 如何实现浏览器内多个标签页之间的通信
+调用localstorge、cookies等本地存储方式
+### 浏览器的内核分别是什么?
+IE浏览器的内核Trident、Mozilla的Gecko、Chrome的Blink（WebKit的分支）、Opera内核原为Presto，现为Blink；
+### 常见兼容性问题
+png24位的图片在iE6浏览器上出现背景，解决方案是做成PNG8.
+
+浏览器默认的margin和padding不同。解决方案是加一个全局的*{margin:0;padding:0;}来统一。
+
+IE6双边距bug:块属性标签float后，又有横行的margin情况下，在ie6显示margin比设置的大。
+
+浮动ie产生的双倍距离 #box{ float:left; width:10px; margin:0 0 0 100px;}
+
+这种情况之下IE会产生20px的距离，解决方案是在float的标签样式控制中加入 ——_display:inline;将其转化为行内属性。(_这个符号只有ie6会识别)
+
+渐进识别的方式，从总体中逐渐排除局部。
+
+首先，巧妙的使用“\9”这一标记，将IE游览器从所有情况中分离出来。
+接着，再次使用“+”将IE8和IE7、IE6分离开来，这样IE8已经独立识别。
+css
+```
+.bb{
+   background-color:#f1ee18;/*所有识别*/
+  .background-color:#00deff\9; /*IE6、7、8识别*/
+  +background-color:#a200ff;/*IE6、7识别*/
+  _background-color:#1e0bd1;/*IE6识别*/
+  }
+```
+IE下,可以使用获取常规属性的方法来获取自定义属性,
+也可以使用getAttribute()获取自定义属性;
+Firefox下,只能使用getAttribute()获取自定义属性.
+解决方法:统一通过getAttribute()获取自定义属性.
+
+IE下,even对象有x,y属性,但是没有pageX,pageY属性;
+Firefox下,event对象有pageX,pageY属性,但是没有x,y属性.
+
+解决方法：（条件注释）缺点是在IE浏览器下可能会增加额外的HTTP请求数。
+
+Chrome 中文界面下默认会将小于 12px 的文本强制按照 12px 显示,
+可通过加入 CSS 属性 -webkit-text-size-adjust: none; 解决.
+
+超链接访问过后hover样式就不出现了 被点击访问过的超链接样式不在具有hover和active了解决方法是改变CSS属性的排列顺序:
+L-V-H-A : a:link {} a:visited {} a:hover {} a:active {}
 
 ## HTTP部分
 ### url->页面加载完成的整个流程
@@ -2171,6 +2332,9 @@ app.use(cors(corsOptions));
 - 事件发生顺序：在移动端，手指点击一个元素，会经过：touchstart --> touchmove -> touchend --》click。
 ### 手机端的web，怎么调用手机的拍照功能，怎么分享到朋友圈?
 ## websocket
+#### 如何兼容低浏览器
+Adobe Flash Socket 、 ActiveX HTMLFile (IE) 、 基于 multipart 编码发送 XHR 、 基于长轮询的 XHR
+
 ## git 
 团队工作
 
