@@ -1,5 +1,19 @@
 # interview-prep
 ## html部分
+### html5为什么只需要写<!DOCTYPE HTML>?
+HTML5 不基于 SGML，因此不需要对DTD进行引用，但是需要doctype来规范浏览器的行为（让浏览器按照它们应该的方式来运行）；
+
+## 行内元素与块级元素
+首先：CSS规范规定，每个元素都有display属性，确定该元素的类型，每个元素都有默认的display值，如div的display默认值为“block”，则为“块级”元素；span默认display属性值为“inline”，是“行内”元素。
+
+（1）行内元素有：a b span img input select strong（强调的语气）
+（2）块级元素有：div ul ol li dl dt dd h1 h2 h3 h4…p
+
+（3）常见的空元素：
+    <br> <hr> <img> <input> <link> <meta>
+    鲜为人知的是：
+    <area> <base> <col> <command> <embed> <keygen> <param> <source> <track> <wbr>
+而HTML4.01基于SGML,所以需要对DTD进行引用，才能告知浏览器文档所使用的文档类型。
 ### 浏览器渲染过程
 > 四个步骤。打油诗曰:先是生成DOM树，再次生成规则树，二者合为渲染树，遍历计算树节点，绘制节点至屏幕。
 - 解析html生成DOM树
