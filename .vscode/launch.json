@@ -15,13 +15,14 @@
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost/mypage.html",
-      "webRoot": "${workspaceFolder}/wwwroot"
+      "webRoot": "${file}"
     },
     {
       "name": "Launch html",
       "type": "chrome",
       "request": "launch",
-      "file": "${file}"
+      "file": "${file}",
+      "runtimeExecutable": "C:\\Users\\calle\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe"
     }
   ]
 }

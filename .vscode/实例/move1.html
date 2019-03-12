@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <style>
+      #ball {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      style="
+        top: 0px;
+        left: 0px;
+        "
+      wid="ball"
+    ></div>
+    <script type="text/javascript">
+      function init() {
+        setInterval(() => {
+          move();
+        }, 100);
+      }
+      function move() {
+        let ball = document.getElementById('ball');
+        let left = parseInt(ball.style.left);
+        left += 1;
+        let top = parseInt(ball.style.top);
+        top += 1;
+        ball.style.left = left + 'px';
+        ball.style.top = top + 'px';
+      }
+      init();
+    </script>
+  </body>
+</html>

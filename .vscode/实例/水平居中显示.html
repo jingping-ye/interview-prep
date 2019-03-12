@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>水平居中显示</title>
+    <style>
+      p {
+        text-align: center;
+      }
+      #align2 {
+        width: 200px;
+        background-color: green;
+        margin: 0 auto;
+      }
+      #align3 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: antiquewhite;
+      }
+      #align4 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        background-color: aquamarine;
+        width: 200px;
+        height: 200px;
+      }
+      #align5 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: blanchedalmond;
+      }
+    </style>
+  </head>
+  <body>
+    <!--  <p id="align1">水平居中1</p>
+    <div id="align2">水平居中2</div> -->
+    <!--  <div id="align3">水平居中3</div> -->
+    <!-- <div id="align4">水平居中4</div> -->
+    <div id="align5">水平居中5</div>
+    <div id="align6">水平居中6</div>
+  </body>
+</html>
