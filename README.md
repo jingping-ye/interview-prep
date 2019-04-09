@@ -834,6 +834,10 @@ SubType.prototype.sayAge = function() {
 
 ### 闭包
 
+变量可以分为全局变量或者局部变量。闭包就是一个函数引用另一个函数的变量，因为变量被引用所以不会被回收，因此可以用来封装一个私有变量。
+闭包就是子函数可以使用父函数的局部变量和参数，还有父函数的参数。
+闭包就是在提供了一个在外部访问另一个函数内部局部变量的方式。
+
 ```
 执行say667()后,say667()闭包内部变量会存在,而闭包内部函数的内部变量不会存在.使得Javascript的垃圾回收机制GC不会收回say667()所占用的资源，因为say667()的内部函数的执行需要依赖say667()中的变量。这是对闭包作用的非常直白的描述.
 
@@ -961,7 +965,7 @@ getUniqueArray(array, item){
 ### 数据类型
 
 - 基本数据类型：string number bool undefined null
-- 引用数据类型：object、symbol。
+- 引用数据类型：object
   另外，object 包括：数组、函数、正则、日期等对象。NaN 属于 number 类型。
   注意，数据类型里，没有数组。因为数组属于 object（一旦说数组、函数、正则、日期、NaN 是数据类型，直接 0 分）。
 
@@ -1295,8 +1299,13 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes
 
 ### ES6 的新特性有哪些?
 
-- 作用域
+- 块级作用域：使用 let 和 const 代替 var,防止变量提升
 - 函数扩展(扩展运算符、默认参数、箭头函数)
+- 对象扩展
+- 解构
+- set 和 map
+- 迭代器和生成器
+- 类
 - 异步 promise
 - 模块化
 
@@ -1325,6 +1334,57 @@ var obj2 = {
 };
 ```
 
+## 介绍下 Set、Map 的区别？
+
+应用场景 Set 用于数据重组，Map 用于数据储存
+
+Set：
+
+（1）成员不能重复
+　　（2）只有键值没有键名，类似数组
+　　（3）可以遍历，方法有 add, delete,has
+
+Map:
+
+（1）本质上是健值对的集合，类似集合
+　　（2）可以遍历，可以跟各种数据格式转换
+
+## setTimeout、Promise、Async/Await 的区别
+
+事件循环中分为宏任务队列和微任务队列
+
+其中 setTimeout 的回调函数放到宏任务队列里，等到执行栈清空以后执行
+
+promise.then 里的回调函数会放到相应宏任务的微任务队列里，等宏任务里面的同步代码执行完再执行
+
+async 函数表示函数里面可能会有异步方法，await 后面跟一个表达式
+
+async 方法执行时，遇到 await 会立即执行表达式，然后把表达式后面的代码放到微任务队列里，让出执行栈让同步代码先执行
+
+## 下面 Set 结构，打印出的 size 值是多少
+
+```js
+let s = new Set();
+s.add([1]);
+s.add([1]);
+console.log(s.size);
+```
+
+两个数组[1]并不是同一个值，它们分别定义的数组，在内存中分别对应着不同的存储地址，因此并不是相同的值
+
+都能存储到 Set 结构中，所以 size 为 2
+
+## 设计一个对象，键名的类型至少包含一个 symbol 类型，并且实现遍历所有 key
+
+```js
+let name = Symbol('name');
+let product = {
+  [name]: '洗衣机',
+  price: 799
+};
+Reflect.ownKeys(product);
+```
+
 ### promise
 
 #### promise 的使用
@@ -1344,6 +1404,18 @@ then：
 如何自己生成 Promise 对象：
 
 ```
+
+let promise = new Promise(function(resolved,reject){
+    resolved();
+});
+//  已完成状态
+promise.then(function(){
+    console.log("Resolved");
+});
+//  拒绝状态:捕捉错误
+promise.catch(function(err){
+    console.log(error)
+})
 	function xxx(){
       return new Promise(function(resolve, reject){
           setTimeout(()=>{
@@ -1355,6 +1427,16 @@ then：
 ```
 
 #### promise 的状态
+
+#### Promise 中 reject 和 catch 处理上有什么区别
+
+reject 是用来抛出异常，catch 是用来处理异常
+
+reject 是 Promise 的方法，而 catch 是 Promise 实例的方法
+
+reject 后的东西，一定会进入 then 中的第二个回调，如果 then 中没有写第二个回调，则进入 catch
+
+网络异常（比如断网），会直接进入 catch 而不会进入 then 的第二个回调
 
 #### setTimeout(0)和一个 promise 哪个先执行
 
@@ -1408,6 +1490,89 @@ let promise = new Promise((resolve, reject) => {
 
  var result = await returnPromise()
  result === 'success'
+```
+
+### 理解 async/await 以及对 Generator 的优势
+
+async await 是用来解决异步的，async 函数是 Generator 函数的语法糖
+
+使用关键字 async 来表示，在函数内部使用 await 来表示异步
+
+async 函数返回一个 Promise 对象，可以使用 then 方法添加回调函数
+
+当函数执行的时候，一旦遇到 await 就会先返回，等到异步操作完成，再接着执行函数体内后面的语句
+
+async 较 Generator 的优势：
+
+（1）内置执行器。Generator 函数的执行必须依靠执行器，而 Aysnc 函数自带执行器，调用方式跟普通函数的调用一样
+
+（2）更好的语义。async 和 await 相较于 \* 和 yield 更加语义化
+
+（3）更广的适用性。yield 命令后面只能是 Thunk 函数或 Promise 对象，async 函数的 await 后面可以是 Promise 也可以是原始类型的值
+
+（4）返回值是 Promise。async 函数返回的是 Promise 对象，比 Generator 函数返回的 Iterator 对象方便，可以直接使用 then() 方法进行调用
+
+### forEach、for in、for of 三者区别
+
+forEach 更多的用来遍历数组
+
+for in 一般常用来遍历对象或 json
+
+for of 数组对象都可以遍历，遍历对象需要通过和 Object.keys()
+
+for in 循环出的是 key，for of 循环出的是 value
+
+### async 和 await
+
+正常情况下，await 命令后面是一个 Promise 对象，返回该对象的结果。如果不是 Promise 对象，就直接返回对应的值（相当于直接 Promise.resolve）。
+
+```js
+//  例子1
+async function async1() {
+  console.log('async1 start');
+  await async2();
+  console.log('async1 end');
+}
+async function async2() {
+  console.log('async2');
+}
+console.log('script start');
+setTimeout(function() {
+  console.log('setTimeout');
+}, 0);
+async1();
+new Promise(function(resolve) {
+  console.log('promise1');
+  resolve();
+}).then(function() {
+  console.log('promise2');
+});
+console.log('script end');
+```
+
+```js
+//例子2
+async function async1() {
+  console.log('async1 start');
+  await async2();
+  console.log('async1 end');
+}
+function async2() {
+  // 去掉了 async 关键字
+  console.log('async2');
+}
+console.log('script start');
+setTimeout(function() {
+  console.log('setTimeout');
+}, 0);
+async1();
+new Promise(function(resolve) {
+  console.log('promise1');
+  resolve();
+}).then(function() {
+  console.log('promise2');
+});
+console.log('script end');
 ```
 
 ## axios 部分
