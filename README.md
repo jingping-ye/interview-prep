@@ -2342,7 +2342,7 @@ vue.js 是采用数据劫持结合发布者-订阅者模式的方式，通过 Ob
 
 ### 封装 vue 组件的过程
 
-然后，使用 Vue.extend 方法创建一个组件，然后使用 Vue.component 方法注册组件。子组件需要数据，可以在 props 中接受定义。而子组件修改好数据后，想把数据传递给父组件。可以采 im 用 emit 方法。
+然后，使用 Vue.extend 方法创建一个组件，然后使用 Vue.component 方法注册组件。子组件需要数据，可以在 props 中接受定义。而子组件修改好数据后，想把数据传递给父组件。可以采 im 用 emit 方法。x
 写好一个组件之后，在需要使用组件的地方 import,在 componet 属性注册，在 template 需要使用的地方调用。子组件通过 props 接受父组件数据，通过 emit 发送数据
 
 ### vue.js 中 template 编译的理解?
