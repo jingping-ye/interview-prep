@@ -460,6 +460,18 @@ p {
 200px; height: 200px; }
 ```
 
+3.文字使用line-height
+
+```js
+<div id="align">文字</div>
+#align{
+    height:100px;
+	line-height:100px;
+}
+```
+
+
+
 ### @import 和 link 的区别
 
 - link 属于 XHTML 标签，除了加载 CSS 外，还能用于定义 RSS, 定义 rel 连接属性等作用；而@import 是 CSS 提供的，只能用于加载 CSS;
@@ -1125,8 +1137,25 @@ getUniqueArray(array, item){
 
 当页面滚动的时间被触发->执行加载图片操作->判断图片是否在可视区域内->在，则动态将 data-src 的值赋予该图片
 
-###实现 add 函数,让 add(a)(b)和 add(a,b)两种调用结果相同
-没有答案:参照函数柯里化
+### 实现 add 函数,让 add(a)(b)和 add(a,b)两种调用结果相同
+
+> 参照函数柯里化
+
+```js
+//	方法一:判断参数的个数，使用高阶函数
+function add(a, b) {
+  if (arguments.length === 2) {
+    return a + b;
+  } else {
+    return function(b) {
+      return a + b;
+    };
+  }
+}
+console.log(add(2, 3));
+console.log(add(2)(3));
+
+```
 
 ### 事件绑定的方式
 
